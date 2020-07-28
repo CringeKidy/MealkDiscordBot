@@ -29,7 +29,7 @@ exports.run = (client, message, args) => {
         const embed = new Discord.MessageEmbed()
             .setTitle("User Info")
             .setAuthor(client.user.username, client.user.displayAvatarURL())
-            .setDescription(`this is **${target.user.username}** info`)
+            .setDescription(`this is **${target.user.tag}** info`)
             .setColor(Colors["Pink(Bright)"])
             .setThumbnail(target.user.displayAvatarURL())
             .setTimestamp();

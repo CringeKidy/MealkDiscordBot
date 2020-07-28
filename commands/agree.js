@@ -5,7 +5,7 @@ exports.run = (client, message, args) => {
             
         const role = message.guild.roles.cache.find(role => role.name === 'Member');
 
-        if(message.member.roles.cache.some(role => role.name === 'Member')){
+        if(!message.member.roles.cache.some(role => role.name === 'Member')){
             message.member.roles.add(role);
         }
         agree();

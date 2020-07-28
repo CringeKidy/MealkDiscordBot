@@ -10,10 +10,12 @@ exports.run = (client, message, args) => {
 
     data.push(`***${keys}***`);
 
-    if(data.indexOf(args)){
+
+    if(keys.includes(args.toString(), 0)){
         let command = "./" + args
         
-        const description = require(command)
+        const description = require(command);
+
 
         if(!description.description){
             message.channel.send('its seems to be that this command dosent have a description')
@@ -34,8 +36,4 @@ exports.run = (client, message, args) => {
     else{
         message.channel.send(`That is not a command i have here are my commands: ${data}` )
     }
-
-    console.log(args)
-
-
 }
