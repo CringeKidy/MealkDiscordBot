@@ -3,6 +3,9 @@ module.exports = (client, message) => {
   const SQLite = require("better-sqlite3");
   const sql = new SQLite('./USERS.sqlite');
 
+  var admintools = true;
+
+
   //ingore all of the bot messsages
   if(message.author.bot) return;
 
@@ -42,6 +45,11 @@ module.exports = (client, message) => {
   // Spillting user message from ! and Message eg !, ping and just getting the word 
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
+
+  if (['ban', 'warn', 'kick'].includes(command) && admintools){
+    return message.author.send('sorry but **Admin Tools** are turned off');
+  }
+
 
   // Grab the command data from the client.commands Enmap
   const cmd = client.commands.get(command);

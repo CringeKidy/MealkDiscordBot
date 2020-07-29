@@ -74,7 +74,9 @@ client.on('guildCreate', guild => {
 
       let configsettings = {
         message_on_new_member : false,
-        items : ['message on new member']
+        welcome_page : false,
+        admin_tools: true,
+        items : ['Message on new Member', 'Welcome Page']
 
       } 
         

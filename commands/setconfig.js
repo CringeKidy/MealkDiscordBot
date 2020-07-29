@@ -4,8 +4,9 @@ const Discord = require('discord.js');
 
 exports.run = (client, message, args) => {
 
+    if(message.channel.type === 'dm'){return console.log('no')};
+
     let servername = `${message.guild.name} Server Config`
-    console.log(servername);
 
     var array = [];
 
@@ -17,7 +18,9 @@ exports.run = (client, message, args) => {
             if(!files.includes(servername)){
                 let configsettings = {
                     message_on_new_member : false,
-                    items : ['message on new member']
+                    welcome_page : false,
+                    admin_tools: true,
+                    items : ['Message on new Member', 'Welcome Page']
                 }
             
                     let name = `${message.guild.name} Server Config`
@@ -29,24 +32,37 @@ exports.run = (client, message, args) => {
                 fs.readFile(`./Jsons/Server_Config/${servername}`, (err, data) => {
                     if (err) throw err;
                     array = JSON.parse(data);
-                    console.log(array.items);
 
                     message.author.send(`ok what do you want to set here is a list of things **${array.items}**`)
-                    const collector = new Discord.MessageCollector(message.author, {time: 10000 });
-                    collector.on('collect', message => {
-                        if(message.content != array.items){
-                            console.log('no')
-                        }
+                    .then(function(){
+                        message.author.dmChannel.awaitMessages(response => message.content, {
+                        max: 1,
+                        time: 300000000,
+                        errors: ['time'],
+                        })
+                        .then(collected => {    
+                            console.log();
+                            let item = collected.first().content;
 
-                    })
+                            if(!array.items.includes(item)){
+                              return message.author.send(`Sorry that is not a command here is a list of commands **${array.keys}**`);
+                            }
+                            
+                            console.log(array);
 
-                    
+                            let input = array.includes(item);
+
+                            console.log(input)
+
+                        })
+                        .catch(e => {
+                            console.log(e)
+                        });
+                    });
                 });
             }            
         });   
     }
-
-
 }
 
-module.exports.description = 'this is to set the server settings like do they want a welcome message or do they want a message when someone joins etc'
+module.exports.description = 'th'
