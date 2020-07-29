@@ -14,6 +14,7 @@ const Colors = require('./Jsons/colors.json')
 const message = require('./events/message');
 const sql = new SQLite('./USERS.sqlite');
 
+
 client.config = config;
 
 //Command Handler
@@ -73,9 +74,12 @@ client.on('guildCreate', guild => {
 
       let configsettings = {
         message_on_new_member : false,
-        Server_stats : false
+        items : ['message on new member']
+
+      } 
+        
       
-      }
+      
 
       let name = `${guild.name} Server Config`
       let data = JSON.stringify(configsettings);

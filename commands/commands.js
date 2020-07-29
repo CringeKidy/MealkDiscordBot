@@ -1,4 +1,5 @@
 const {prefix} = require('../Jsons/config.json');
+
 exports.run = (client, message, args) => {
 
     const data = [];

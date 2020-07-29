@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/XxcringekidxX/Mess-Around-Bot.git"
+    "url": "git+https://github.com/CringeKidy/DiscordBot.git"
   },
   "author": "Justace Cornelder",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/XxcringekidxX/Mess-Around-Bot/issues"
+    "url": "https://github.com/CringeKidy/DiscordBot/issues"
   },
-  "homepage": "https://github.com/XxcringekidxX/Mess-Around-Bot#readme",
+  "homepage": "https://github.com/CringeKidy/DiscordBot/#readme",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "better-sqlite3": "^7.1.0",

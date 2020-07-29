@@ -1,11 +1,10 @@
 const { DiscordAPIError } = require('discord.js');
 
+const fs = require('fs')
+const Discord = require('discord.js')
+const data = [];
+
 exports.run = (client, message, args) => {
-
-    const fs = require('fs')
-    const Discord = require('discord.js')
-
-    const data = [];
     let keys = Array.from(client.commands.keys());
 
     data.push(`***${keys}***`);

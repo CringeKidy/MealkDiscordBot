@@ -18,3 +18,5 @@ exports.run = (client, message, args) => {
         await message.channel.bulkDelete(deletable, true)
     }
 }
+
+module.exports.description = 'this a authintaction thing like siging into a account just without the password'

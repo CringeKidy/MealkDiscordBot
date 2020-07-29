@@ -1,7 +1,9 @@
-exports.run = (client, message, args) => {
-    const Discord = require('discord.js');
-    const Colors = require('../Jsons/colors.json');
+const Discord = require('discord.js');
+const Colors = require('../Jsons/colors.json');
 
+
+exports.run = (client, message, args) => {
+    
     if(!message.member.roles.cache.some(r => r.name === 'Admin')){
         message.channel.send("Sorry but your not an admin");
     }

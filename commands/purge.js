@@ -9,18 +9,26 @@ exports.run = (client, message, args) => {
 
         if(!amount) return message.channel.send("you need to say an ammount");
 
-        if(amount > 100 || amount < 0 || amount === "max"){
-            message.channel.send('to high somewhere between 1-100 please or do !purge max')
+        if(Number(amount) > 100 || Number(amount) < 0){
+            return message.channel.send('to high somewhere between 1-100 please or do !purge max');
         }
         if (amount === "max"){
             amount = 100;
+
+            try{
+                message.channel.bulkDelete(amount, true);
+            }
+            catch(e){
+                console.error(e)
+            }
         }
-    
-        try{
-            message.channel.bulkDelete(amount, true);
-        }
-        catch(e){
-            console.error(e)
+        else{
+            try{
+                message.channel.bulkDelete(amount, true);
+            }
+            catch(e){
+                console.error(e)
+            }
         }
     }
 
