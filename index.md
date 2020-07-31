@@ -20,7 +20,7 @@ well sorry if you have bugs but to report them there are 2 things you can do you
 1.join my discord server and leave a report in bot-bugreports:
 	[My Discord Server invite](https://discord.gg/kZh7Zff)
 	
-2. you can leave an issue report here on the repo
+2.you can leave an issue report here on the repo
 	[Issues](https://github.com/XxcringekidxX/DiscordBot/issues)
 	
 ## Other things
