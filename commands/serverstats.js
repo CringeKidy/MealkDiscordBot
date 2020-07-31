@@ -5,16 +5,16 @@ exports.run = (client, message, args) => {
     }
     else{
         if(!message.guild.channels.cache.find(r => r.name === 'Server Stats')){
-            guild.channels.create('Server Stats', { reason: 'Making what the Server needs', type: 'category' })
+            message.guild.channels.create('Server Stats', { reason: 'Making what the Server needs', type: 'category' })
             .then(channel => {
-              guild.channels.create('Total Users: 0', { reason: 'Making what the Server needs', parent: channel.id, type: 'voice'}) 
-              guild.channels.create('Users: 0', { reason: 'Making what the Server needs', parent: channel.id, type: 'voice'})
-              guild.channels.create('Bots: 0', { reason: 'Making what the Server needs', parent: channel.id, type: 'voice'})
+              message.guild.channels.create(`Total Users : ${message.guild.memberCount}`, { reason: 'Making what the Server needs', parent: channel.id, type: 'voice'}) 
+              message.guild.channels.create(`Users : ${message.guild.members.cache.filter(m => !m.user.bot).size}`, { reason: 'Making what the Server needs', parent: channel.id, type: 'voice'})
+              message.guild.channels.create(`Bots : ${message.guild.members.cache.filter(m => m.user.bot).size}`, { reason: 'Making what the Server needs', parent: channel.id, type: 'voice'})
             })
-            guild.channels.create('join-and-leave', {reason: 'Cause the bot needs it ', type: 'text'})
+            message.guild.channels.create('join-and-leave', {reason: 'Cause the bot needs it ', type: 'text'})
             .catch(console.error);
           }
-        if(message.guild.channels.cache.find(r => r.name === 'Server Stats')){
+        else if(message.guild.channels.cache.find(r => r.name === 'Server Stats')){
             message.channel.send('looks like everything is already here')
         }
     }
