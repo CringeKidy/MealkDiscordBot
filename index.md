@@ -28,3 +28,5 @@ if you have any questions please dont be afaird to ask and if you want to start 
 	[An Idiots Guide](https://anidiots.guide/v/v12/)
 
 if the bot is down or not working please check my twitch, if im not streaming, please check my insta, and if nothings there then please post and issue your go to my discord
+
+### Commands
