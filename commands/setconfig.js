@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const Color = require('../Jsons/colors.json')
 
 
 exports.run = (client, message, args) => {
@@ -17,23 +18,36 @@ exports.run = (client, message, args) => {
         fs.readdir('./Jsons/Server_Config/', (err, files) => {
             if(!files.includes(servername)){
                 let configsettings = {
-                    message_on_new_member : false,
-                    welcome_page : false,
-                    admin_tools: true,
-                    items : ['Message on new Member', 'Welcome Page']
+                    Modules : [{name : "Message on new Member", value : false}, {name : "Welcome Page", value : false}, {name : "Admin Tools", value : true}]
                 }
-            
-                    let name = `${message.guild.name} Server Config`
-                    let data = JSON.stringify(configsettings);
-                    var path = './Jsons/Server_Config/';
-                    fs.writeFileSync(path + name, data);
+        
+                let name = `${message.guild.name} Server Config`
+                let data = JSON.stringify(configsettings);
+                var path = './Jsons/Server_Config/';
+                fs.writeFileSync(path + name, data);
+
+                message.channel.send('Sorry there was no Config file for this serever please do !setconfig again')
             }
             else{
                 fs.readFile(`./Jsons/Server_Config/${servername}`, (err, data) => {
                     if (err) throw err;
                     array = JSON.parse(data);
 
-                    message.author.send(`ok what do you want to set here is a list of things **${array.items}**`)
+                    var objects = [];
+
+                    for(i in array.Modules){
+                        objects.push(array.Modules[i].name && array.Modules[i].value)
+                    }
+                    
+                    console.log(objects)
+
+                    message.author.send(new Discord.MessageEmbed()
+                    .setTitle('Server Config')
+                    .addField('Command list',`${objects}`)
+                    .addField("Please type the command excalty its **Case Sensitive**", '\n\u200b')
+                    .setColor(Color.Orange)
+                    .setFooter(`Created by ${client.user.tag}`, client.user.displayAvatarURL())
+                    )
                     .then(function(){
                         message.author.dmChannel.awaitMessages(response => message.content, {
                         max: 1,
@@ -41,18 +55,15 @@ exports.run = (client, message, args) => {
                         errors: ['time'],
                         })
                         .then(collected => {    
-                            console.log();
                             let item = collected.first().content;
 
-                            if(!array.items.includes(item)){
-                              return message.author.send(`Sorry that is not a command here is a list of commands **${array.keys}**`);
+                            if(!objects.includes(item)){
+                              return message.author.send(`Sorry that is not a command here is a list of commands **${objects}**`);
                             }
                             
-                            console.log(array);
-
-                            let input = array.includes(item);
-
-                            console.log(input)
+                            if(objects.includes(item)){
+                                console.log('yes')
+                            }
 
                         })
                         .catch(e => {
@@ -65,4 +76,4 @@ exports.run = (client, message, args) => {
     }
 }
 
-module.exports.description = 'th'
+module.exports.description = 'This is setting the Server Configuration EG Message when a member joins'
