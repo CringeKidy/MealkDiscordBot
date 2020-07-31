@@ -1,6 +1,8 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const Color = require('../Jsons/colors.json')
+const Color = require('../Jsons/colors.json');
+const { captureRejectionSymbol } = require('events');
+const { findSourceMap } = require('module');
 
 
 exports.run = (client, message, args) => {
@@ -10,6 +12,8 @@ exports.run = (client, message, args) => {
     let servername = `${message.guild.name} Server Config`
 
     var array = [];
+    var objects = [];
+ 
 
     if(!message.member.roles.cache.some(r => r.name === 'Admin') || !message.guild.owner){
         message.channel.send('sorry but your are not admin')
@@ -33,12 +37,9 @@ exports.run = (client, message, args) => {
                     if (err) throw err;
                     array = JSON.parse(data);
 
-                    var objects = [];
-
                     for(i in array.Modules){
-                        objects.push(array.Modules[i].name && array.Modules[i].value)
+                        objects.push(array.Modules[i].name)
                     }
-                    
                     console.log(objects)
 
                     message.author.send(new Discord.MessageEmbed()
@@ -60,10 +61,19 @@ exports.run = (client, message, args) => {
                             if(!objects.includes(item)){
                               return message.author.send(`Sorry that is not a command here is a list of commands **${objects}**`);
                             }
+                        
+                            console.log(item)
+                            var index = array.Modules.find(r => r.name === item).value = !array.Modules.find(r => r.name === item).value
+                            var value = array.Modules.find(r => r.name === item).value;
+
+                            let json = JSON.parse(JSON.stringify(index).replace(value, value));
+                            console.log(json)
+                            fs.writeFileSync(servername, json)
                             
-                            if(objects.includes(item)){
-                                console.log('yes')
-                            }
+
+
+                            //array.Modules.find(r => r.name === item).value = !array.Modules.find(r => r.name === item).value
+                            
 
                         })
                         .catch(e => {
