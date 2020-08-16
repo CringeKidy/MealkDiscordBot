@@ -3,8 +3,10 @@ module.exports = (client, message) => {
   const SQLite = require("better-sqlite3");
   const sql = new SQLite('./USERS.sqlite');
 
-  var admintools = true;
-
+  const fs = require('fs');
+  const Path = './Jsons/Server_Config/'
+ 
+  var Array = [];
 
   //ingore all of the bot messsages
   if(message.author.bot) return;
@@ -46,18 +48,39 @@ module.exports = (client, message) => {
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
-  if (['ban', 'warn', 'kick'].includes(command) && admintools){
-    return message.author.send('sorry but **Admin Tools** are turned off');
-  }
+  fs.readdir(Path, (err, files) => {
+    if(!files.includes(`${message.guild.name} Server Config`)){
+      message.channel.send('Sorry there was no Config file for this serever please do !setconfig to set your servers Settings')
+    }
+    if(command === "setconfig"){
+      const cmd = client.commands.get(command);
+    
+      // If that command doesn't exist, silently exit and do nothing
+      if (!cmd) return;
 
-
-  // Grab the command data from the client.commands Enmap
-  const cmd = client.commands.get(command);
-
-
-  // If that command doesn't exist, silently exit and do nothing
-  if (!cmd) return;
-
-  // Run the command
-  cmd.run(client, message, args);
+      // Run the command
+      cmd.run(client, message, args);
+    }
+    else{
+      fs.readFile(`./Jsons/Server_Config/${message.guild.name} Server Config`, function(err, data){
+        if (err) throw err;
+        Array = JSON.parse(data);
+    
+        if (['ban', 'warn', 'kick', 'purge'].includes(command) && Array.Modules.find(r => r.name === "Admin Tools").value == false){
+          return message.author.send('sorry but **Admin Tools** are turned off');
+        }
+    
+        // Grab the command data from the client.commands Enmap
+        const cmd = client.commands.get(command);
+  
+  
+        // If that command doesn't exist, silently exit and do nothing
+        if (!cmd) return;
+  
+        // Run the command
+        cmd.run(client, message, args);
+    
+      });
+    }
+  })
 };

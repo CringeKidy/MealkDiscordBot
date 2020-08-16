@@ -14,7 +14,6 @@ const Colors = require('./Jsons/colors.json')
 const message = require('./events/message');
 const sql = new SQLite('./USERS.sqlite');
 
-
 client.config = config;
 
 //Command Handler

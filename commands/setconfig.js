@@ -1,9 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const Color = require('../Jsons/colors.json');
-const { captureRejectionSymbol } = require('events');
-const { findSourceMap } = require('module');
-
+const Path = './Jsons/Server_Config/'
 
 exports.run = (client, message, args) => {
 
@@ -11,7 +9,7 @@ exports.run = (client, message, args) => {
 
     let servername = `${message.guild.name} Server Config`
 
-    var array = [];
+    var Array = [];
     var objects = [];
  
 
@@ -19,28 +17,25 @@ exports.run = (client, message, args) => {
         message.channel.send('sorry but your are not admin')
     }
     else{
-        fs.readdir('./Jsons/Server_Config/', (err, files) => {
+        fs.readdir(Path, (err, files) => {
             if(!files.includes(servername)){
                 let configsettings = {
-                    Modules : [{name : "Message on new Member", value : false}, {name : "Welcome Page", value : false}, {name : "Admin Tools", value : true}]
+                    Modules : [{name : "Message on new Member", value : false}, {name : "Welcome Page", value : false}, {name : "Admin Tools", value : true}, {name : "Admin Rool", value : ""}]
                 }
         
                 let name = `${message.guild.name} Server Config`
                 let data = JSON.stringify(configsettings);
                 var path = './Jsons/Server_Config/';
                 fs.writeFileSync(path + name, data);
-
-                message.channel.send('Sorry there was no Config file for this serever please do !setconfig again')
             }
             else{
-                fs.readFile(`./Jsons/Server_Config/${servername}`, (err, data) => {
+                fs.readFile(Path+servername, (err, data) => {
                     if (err) throw err;
-                    array = JSON.parse(data);
+                    Array = JSON.parse(data);
 
-                    for(i in array.Modules){
-                        objects.push(array.Modules[i].name)
+                    for(i in Array.Modules){
+                        objects.push(Array.Modules[i].name)
                     }
-                    console.log(objects)
 
                     message.author.send(new Discord.MessageEmbed()
                     .setTitle('Server Config')
@@ -61,20 +56,68 @@ exports.run = (client, message, args) => {
                             if(!objects.includes(item)){
                               return message.author.send(`Sorry that is not a command here is a list of commands **${objects}**`);
                             }
-                        
-                            console.log(item)
-                            var index = array.Modules.find(r => r.name === item).value = !array.Modules.find(r => r.name === item).value
-                            var value = array.Modules.find(r => r.name === item).value;
+                            if(item === "Admin Rool"){
+                                message.author.send(`Please give me the name of your Admin **Case Sensitive**`)
+                                .then(function(){
+                                    message.author.dmChannel.awaitMessages(response => message.content, {
+                                    max: 1,
+                                    time: 300000000,
+                                    errors: ['time'],
+                                    })
+                                })
+                                .then(collected => {
+                                    let item = collected.first().content;
 
-                            let json = JSON.parse(JSON.stringify(index).replace(value, value));
-                            console.log(json)
-                            fs.writeFileSync(servername, json)
+                                    Array.Modules.map(name => {
+                                
+                                        var value;
+        
+                                        if(name.name === item){
+        
+                                            function toggleByName(name, object) {
+                                                for (let obj of object.Modules) {
+                                                    if (obj.name == name) {
+                                                    obj.value = !obj.value;
+                                                    break;
+                                                }
+                                                }
+                                            }
+                                
+                                            // Changes admin tools from true -> false
+                                            toggleByName(item, Array);
+                                            fs.writeFileSync(Path+servername, JSON.stringify(Array));
+        
+                                        }
+                                    })
+
+                                    message.author.send(`the prammeter **${item}** has been changed to **${Array.Modules.find(r => r.name === item).value}**`)
+
+                                })
+                            }
+                            else{
+                                Array.Modules.map(name => {
+                                    
+                                    var value;
+    
+                                    if(name.name === item){
+    
+                                        function toggleByName(name, object) {
+                                            for (let obj of object.Modules) {
+                                              if (obj.name == name) {
+                                                obj.value = !obj.value;
+                                              break;
+                                            }
+                                          }
+                                        }
                             
-
-
-                            //array.Modules.find(r => r.name === item).value = !array.Modules.find(r => r.name === item).value
-                            
-
+                                        // Changes admin tools from true -> false
+                                        toggleByName(item, Array);
+                                        fs.writeFileSync(Path+servername, JSON.stringify(Array));
+    
+                                        message.author.send(`the prammeter **${item}** has been changed to **${Array.Modules.find(r => r.name === item).value}**`)
+                                    }
+                                })
+                            }
                         })
                         .catch(e => {
                             console.log(e)
