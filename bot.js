@@ -69,24 +69,19 @@ client.on("ready", () =>{
 client.on('guildCreate', guild => {
   fs.readdir('./Jsons/Server_Config', (err, files) => {
   
-    if(!files.includes(`${guild.name}`)){
+    if(!files.includes(`${guild.name} Server Config`)){
 
       let configsettings = {
-        message_on_new_member : false,
-        welcome_page : false,
-        admin_tools: true,
-        items : ['Message on new Member', 'Welcome Page']
-
-      } 
-        
-      
-      
+        Modules : [{name : "Message on new Member", value : false}, {name : "Welcome Page", value : false}, {name : "Admin Tools", value : true}, {name : "Admin Rool", value : ""}]
+      }
 
       let name = `${guild.name} Server Config`
       let data = JSON.stringify(configsettings);
       var path = './Jsons/Server_Config/';
       fs.writeFileSync(path + name, data);
     }
+
+    guild.owner.send("please do !setconfig in the server to set the server **Admin Rool**")
 
   });  
 })
@@ -135,31 +130,6 @@ client.on('guildMemberRemove', member => {
     client.channels.cache.get(array[2]).setName(`Bots : ${member.guild.members.cache.filter(m => m.user.bot).size}`);
   }
 })
-
-
-//Error Processing so everytime there is a error a json gets made to keep track of errors
-process.on('unhandledRejection', error => {
-  var indexnum
-
-  console.log(error)
-
-  fs.readdir('./Jsons/Errors/', (err, files) => {
-    indexnum = files.length;
-    console.log(`Index Num: ${indexnum}`);
-    console.log(indexnum)
-
-    var currentdate = new Date();
-
-    let ErrorMessage = { 
-      Error: error.message,
-      time: currentdate, 
-   };
-
-    let data = JSON.stringify(ErrorMessage);
-    var path = './Jsons/Errors/';
-    fs.writeFileSync(path + 'Error_Log_' + indexnum, data);
-  });
-}) 
 
 
 //log in for the bot

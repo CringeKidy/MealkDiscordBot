@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const Colors = require('../Jsons/colors.json');
-const fs = require('fs')
+const fs = require('fs');
 var Array = [];
 
 
@@ -10,9 +10,9 @@ exports.run = (client, message, args) => {
         if (err) throw err;
         Array = JSON.parse(data);
     
-        Config = Array.Modules.find(r => r.name === "Admin Rool")
+        let ServerConfig = Array.Modules.find(r => r.name === "Admin Rool").value;
          
-        if(!message.member.roles.cache.some(r => r.name === Config)){
+        if(!message.member.roles.cache.some(r => r.name === ServerConfig)){
             message.channel.send("Sorry but your not an admin if you have a admin role do **!setconfig** and set the admin role");
         }
         else{
