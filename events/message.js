@@ -47,12 +47,11 @@ module.exports = (client, message) => {
   // Spillting user message from ! and Message eg !, ping and just getting the word 
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
+  
+  if(message.channel.type === 'dm' && message.content.startsWith("!")){return message.author.send("sorry i do no take commands in DMs only servers")};
 
   fs.readdir(Path, (err, files) => {
-    if(!files.includes(`${message.guild.name} Server Config`)){
-      message.channel.send('Sorry there was no Config file for this serever please do !setconfig to set your servers Settings')
-    }
-    if(command === "setconfig"){
+    if(!files.includes(`${message.guild.name} Server Config`) && command === "setconfig"){
       const cmd = client.commands.get(command);
     
       // If that command doesn't exist, silently exit and do nothing
@@ -60,6 +59,9 @@ module.exports = (client, message) => {
 
       // Run the command
       cmd.run(client, message, args);
+    }
+    if(!files.includes(`${message.guild.name} Server Config`)){
+      return message.channel.send('Sorry there was no Config file for this serever please do !setconfig to set your servers Settings');
     }
     else{
       fs.readFile(`./Jsons/Server_Config/${message.guild.name} Server Config`, function(err, data){

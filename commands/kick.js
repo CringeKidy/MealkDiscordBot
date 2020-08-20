@@ -7,9 +7,9 @@ exports.run = (client, message, args) => {
         if (err) throw err;
         Array = JSON.parse(data);
     
-        let ServerConfig = Array.Modules.find(r => r.name === "Admin Rool").value;
+        let ServerConfig = Array.Modules.find(r => r.name === "Admin Role").value;
          
-    if(!message.member.roles.cache.some(r => r.name === ServerConfig)){
+    if(!message.member.roles.cache.get(ServerConfig)){
         message.channel.send("Sorry but your not an admin if you have a admin role do **!setconfig** and set the admin role");
     }
     else{

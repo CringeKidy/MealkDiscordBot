@@ -72,7 +72,7 @@ client.on('guildCreate', guild => {
     if(!files.includes(`${guild.name} Server Config`)){
 
       let configsettings = {
-        Modules : [{name : "Message on new Member", value : false}, {name : "Welcome Page", value : false}, {name : "Admin Tools", value : true}, {name : "Admin Rool", value : ""}]
+        Modules : [{name : "Message on new Member", value : false}, {name : "Welcome Page", value : false}, {name : "Admin Tools", value : true}, {name : "Admin Role", value : ""},{name : "Member Role", value : ""},{name : "Welcome Page Channel", value : ""}]
       }
 
       let name = `${guild.name} Server Config`
@@ -81,25 +81,45 @@ client.on('guildCreate', guild => {
       fs.writeFileSync(path + name, data);
     }
 
-    guild.owner.send("please do !setconfig in the server to set the server **Admin Rool**")
+    guild.owner.send("please do !setconfig in the server to set the server **Admin Role**")
 
   });  
 })
  
 //when a new user joins the server 
 client.on("guildMemberAdd", member =>{
+
+  let path = `./Jsons/Server_Config/${member.guild.name} Server Config`
+  var Array = [];
+  var Objects = [];
   var array = member.guild.channels.cache.find(r => r.name === 'Server Stats').children.keyArray()
 
-  member.guild.channels.cache.find(r => r.name === 'join-and-leave').send(new Discord.MessageEmbed()
-  .setTitle("A New Users")
-  .setDescription(`${member.user.tag} has join the ${member.guild.name} Server`)
-  .setThumbnail(member.user.displayAvatarURL())
-  .addField(`Members now:`, `${member.guild.memberCount}`)
-  .setTimestamp()
-  .setFooter(`Created by ${client.user.tag}`)
-  .setColor(Colors.Green)
-  .setAuthor(`${client.user.tag}`, client.user.displayAvatarURL())
-  );
+
+  fs.readFile(path, (err, data) =>{
+    if (err) throw err;
+    Array = JSON.parse(data);
+
+    for(i in Array.Modules){
+        Objects.push(Array.Modules[i].name)
+    }
+
+    let ServerConfig = Array.Modules.find(r => r.name === "Message on new Member").value
+
+    if(ServerConfig == true){
+      member.guild.channels.cache.find(r => r.name === 'join-and-leave').send(new Discord.MessageEmbed()
+      .setTitle("A New Users")
+      .setDescription(`${member.user.tag} has join the ${member.guild.name} Server`)
+      .setThumbnail(member.user.displayAvatarURL())
+      .addField(`Members now:`, `${member.guild.memberCount}`)
+      .setTimestamp()
+      .setFooter(`Created by ${client.user.tag}`)
+      .setColor(Colors.Green)
+      .setAuthor(`${client.user.tag}`, client.user.displayAvatarURL())
+      );
+    }
+
+  })
+
   let score
   
   if (member.guild){  
