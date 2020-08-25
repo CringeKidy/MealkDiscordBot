@@ -31,8 +31,6 @@ exports.run = (client, message, args) => {
                 for(i in Array.Modules){
                     objects.push(Array.Modules[i].name)
                 }
-
-                objects.splice(4)
                 
                 ServerConfig = Array.Modules.find(r => r.name === "Admin Role").value;
                
@@ -82,13 +80,18 @@ exports.run = (client, message, args) => {
         }        
         
         function ReplyMessage(){
-            message.author.send(new Discord.MessageEmbed()
+            let embed = new Discord.MessageEmbed()
             .setTitle('Server Config')
-            .addField('Command list',`${objects}`)
-            .addField("Please type the command excalty its **Case Sensitive**", '\n\u200b')
+            .addField('Command list','\n\u200b')
+            .addField("Please type the command excalty its **Case Sensitive**:", '\n\u200b')
             .setColor(Color.Orange)
             .setFooter(`Created by ${client.user.tag}`, client.user.displayAvatarURL())
-            )
+            .setThumbnail(message.guild.iconURL())
+
+
+            objects.forEach(name => embed.addField(name, '\n\u200b'))
+
+            message.author.send(embed)
             .then(function(){
                 message.author.dmChannel.awaitMessages(response => message.content, {
                 max: 1,
@@ -101,8 +104,6 @@ exports.run = (client, message, args) => {
     
                     if(item.includes("Admin Role")){
                         
-                        let replyitem = item.slice(0, 10)
-    
                         if(!reply[2]){
                             return message.author.send(`please do Admin Role (then name of your role ) \n**Admin Role Admin**`);
                         }
@@ -111,7 +112,7 @@ exports.run = (client, message, args) => {
     
                         let Role;
                         try{
-                            Role = message.guild.roles.cache.find(r => r.name === replyitem[2]).id
+                            Role = message.guild.roles.cache.find(r => r.name === reply[2]).id
                         }
                         catch{
                             return message.author.send("Sorry but that dose not seem to be a role in your server");
@@ -182,6 +183,62 @@ exports.run = (client, message, args) => {
                             console.log("no")
                         }
     
+                    }
+                    if(item.includes("Member Role")){
+    
+                        if(!reply[2]){
+                            return message.author.send(`please do Member Role (then name of your role ) EG: \n**Member Role Member**`);
+                        }
+    
+                        if(message.author.username != message.guild.owner.user.username) return message.author.send("Sorry you cant not change that");
+    
+                        let Role;
+                        try{
+                            Role = message.guild.roles.cache.find(r => r.name === reply[2]).id
+                        }
+                        catch{
+                            return message.author.send("Sorry but that dose not seem to be a role in your server");
+                        }
+    
+                        Array.Modules.map(name => {
+    
+                            Array.Modules.find(r => r.name === "Member Role").value = Role;
+                            
+                            fs.writeFileSync(Path+servername, JSON.stringify(Array));                                    
+                        })
+    
+                        message.author.send(`the prammeter **Member Role** has been changed to **${message.guild.roles.cache.get(Role).name}**`)
+
+
+                    }
+                    if(item.includes("Welcome Page Channel")){
+
+                        if(!reply[3]){
+                            return message.author.send(`please do Welcome Page Channel (then name of your role ) EG: \n**Welcome Page Channel welcome-page**`);
+                        }
+    
+                        if(message.author.username != message.guild.owner.user.username) return message.author.send("Sorry you cant not change that");
+    
+                        console.log(reply)
+
+                        let Channel;
+                        try{
+                            Channel = message.guild.channels.cache.find(r => r.name === reply[3]).id
+                        }
+                        catch{
+                            return message.author.send("Sorry but that dose not seem to be a role in your server");
+                        }
+    
+                        Array.Modules.map(name => {
+    
+                            Array.Modules.find(r => r.name === "Welcome Page Channel").value = Channel;
+                            
+                            fs.writeFileSync(Path+servername, JSON.stringify(Array));                                    
+                        })
+    
+                        message.author.send(`the prammeter **Welcome Page Channel** has been changed to **${reply[3]}**`)
+
+
                     }
                     else{
                         Array.Modules.map(name => {

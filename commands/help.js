@@ -1,5 +1,3 @@
-const { DiscordAPIError } = require('discord.js');
-
 const fs = require('fs')
 const Discord = require('discord.js')
 const data = [];
@@ -8,7 +6,6 @@ exports.run = (client, message, args) => {
     let keys = Array.from(client.commands.keys());
 
     data.push(`***${keys}***`);
-
 
     if(keys.includes(args.toString(), 0)){
         let command = "./" + args
@@ -22,7 +19,7 @@ exports.run = (client, message, args) => {
         else{
             message.channel.send(new Discord.MessageEmbed()
                 .setTitle('Command Help')
-                .addField('Command', args, true)
+                .addField('Command', `**${args}**`, true)
                 .addField('Description', description.description, true)
                 .setAuthor(client.user.tag)
                 .setDescription('This is the command and what it dose')

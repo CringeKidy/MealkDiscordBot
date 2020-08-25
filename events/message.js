@@ -68,6 +68,11 @@ module.exports = (client, message) => {
         if (err) throw err;
         Array = JSON.parse(data);
     
+        if(Array.Modules.find(r => r.name === "Admin Role").value === ""){
+          message.channel.send("There has been no **Admin Role** set please do so")
+        }
+
+
         if (['ban', 'warn', 'kick', 'purge'].includes(command) && Array.Modules.find(r => r.name === "Admin Tools").value == false){
           return message.author.send('sorry but **Admin Tools** are turned off');
         }

@@ -68,6 +68,8 @@ client.on("ready", () =>{
 
 client.on('guildCreate', guild => {
   fs.readdir('./Jsons/Server_Config', (err, files) => {
+
+    
   
     if(!files.includes(`${guild.name} Server Config`)){
 
