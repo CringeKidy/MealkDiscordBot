@@ -1,4 +1,4 @@
-const {prefix} = require('../Jsons/config.json');
+const { prefix } = require('../Jsons/config.json');
 
 exports.run = (client, message, args) => {
 
@@ -11,7 +11,7 @@ exports.run = (client, message, args) => {
     console.log(keys)
     data.push(`***${keys}***`);
 
-    if(member){
+    if (member) {
         return member.send(data, { split: true })
             .then(() => {
                 if (message.channel.type === 'dm') return;
@@ -20,9 +20,9 @@ exports.run = (client, message, args) => {
             .catch(error => {
                 console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
                 message.reply('it seems like I can\'t DM you!');
-            }); 
+            });
     }
-    else{
+    else {
         return message.author.send(data, { split: true })
             .then(() => {
                 if (message.channel.type === 'dm') return;
@@ -32,7 +32,7 @@ exports.run = (client, message, args) => {
                 console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
                 message.reply('it seems like I can\'t DM you!');
             });
-    }    
+    }
 }
 
 module.exports.description = 'this is a list of all of the command that the bot has'

@@ -7,16 +7,16 @@ exports.run = (client, message, args) => {
 
     data.push(`***${keys}***`);
 
-    if(keys.includes(args.toString(), 0)){
+    if (keys.includes(args.toString(), 0)) {
         let command = "./" + args
-        
+
         const description = require(command);
 
 
-        if(!description.description){
+        if (!description.description) {
             message.channel.send('its seems to be that this command dosent have a description')
         }
-        else{
+        else {
             message.channel.send(new Discord.MessageEmbed()
                 .setTitle('Command Help')
                 .addField('Command', `**${args}**`, true)
@@ -29,7 +29,7 @@ exports.run = (client, message, args) => {
             );
         }
     }
-    else{
-        message.channel.send(`That is not a command i have here are my commands: ${data}` )
+    else {
+        message.channel.send(`That is not a command i have here are my commands: ${data}`)
     }
 }

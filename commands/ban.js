@@ -5,43 +5,43 @@ var Array = [];
 
 
 exports.run = (client, message, args) => {
-    
-    fs.readFile(`./Jsons/Server_Config/${message.guild.name} Server Config`, function(err, data){
+
+    fs.readFile(`./Jsons/Server_Config/${message.guild.name} Server Config`, function (err, data) {
         if (err) throw err;
         Array = JSON.parse(data);
-    
+
         let ServerConfig = Array.Modules.find(r => r.name === "Admin Role").value;
-         
-        if(!message.member.roles.cache.get(ServerConfig)){
+
+        if (!message.member.roles.cache.get(ServerConfig)) {
             message.channel.send("Sorry but your not an admin if you have a admin role do **!setconfig** and set the admin role");
         }
-        else{
+        else {
             const banuser = message.mentions.members.first();
-            if(!banuser) return message.channel.send("you need to menition someone");
-        
+            if (!banuser) return message.channel.send("you need to menition someone");
+
             let reason = args.slice(1).join(" ");
-            if(!reason) return message.channel.send("you need add a reason");
-        
-        
+            if (!reason) return message.channel.send("you need add a reason");
+
+
             let banneduser
             banneduser = client.getUser.get(banuser.user.username);
-        
-            if(!banneduser){
-                banneduser = { id: banuser.username, user: banuser.username, BANS: 0, Warns : 0, warn_reason: "", commands: 0}
+
+            if (!banneduser) {
+                banneduser = { id: banuser.username, user: banuser.username, BANS: 0, Warns: 0, warn_reason: "", commands: 0 }
             }
-        
+
             banneduser.BANS++;
             client.setUser.run(banneduser)
-        
+
             message.guild.channels.cache.get("731125445109612606").send(new Discord.MessageEmbed()
-            .setTitle("A User has Been Banned")
-            .setAuthor(client.user.username, client.user.displayAvatarURL())
-            .setDescription(`${banuser.user.username} has been **BANNED**`)
-            .setColor(Colors.Gold)
-            .setThumbnail(banuser.user.displayAvatarURL())
-            .addField(`Reason:`, reason)
+                .setTitle("A User has Been Banned")
+                .setAuthor(client.user.username, client.user.displayAvatarURL())
+                .setDescription(`${banuser.user.username} has been **BANNED**`)
+                .setColor(Colors.Gold)
+                .setThumbnail(banuser.user.displayAvatarURL())
+                .addField(`Reason:`, reason)
             );
-            
+
             banuser.ban();
         }
     })

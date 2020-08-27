@@ -1,10 +1,10 @@
 exports.run = (client, message, args) => {
 
-    if(!message.member.roles.cache.some(r => r.name === 'Admin')){
+    if (!message.member.roles.cache.some(r => r.name === 'Admin')) {
         message.channel.send("Sorry but your not an admin");
     }
-    else{
-        
+    else {
+
         client.emit('guildMemberAdd', message.member)
     }
 
