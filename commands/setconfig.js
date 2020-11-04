@@ -258,7 +258,7 @@ exports.run = (client, message, args) => {
                                     }
                                 })
                                 if (Array.Modules.find(r => r.name === "Bot Logging").value === true) {
-                                    message.guild.channels.create("bot-logging", { reason: 'Making what the Server needs', type: 'text' })
+                                    message.guild.channels.create("bot-logs", { reason: 'Making a bot logging channel', type: 'text' })
                                         .then(channel => {
                                             message.guild.channels.cache.get(channel.id).send("this is where i will post all of the logs")
 
@@ -283,8 +283,6 @@ exports.run = (client, message, args) => {
                                 }
 
                                 if (message.author.username != message.guild.owner.user.username) return message.author.send("Sorry you cant not change that");
-
-                                console.log(reply)
 
                                 let Channel;
                                 try {

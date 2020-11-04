@@ -9,6 +9,8 @@ exports.run = (client, message, args) => {
         Array = JSON.parse(data);
 
         let ServerConfig = Array.Modules.find(r => r.name === "Admin Role").value;
+        let LogChannel = message.guild.channels.cache.get(Array.Modules.find(r => r.name === "Bot Logging Channel").value)
+        let BotLogging = Array.Modules.find(r => r.name === "Bot Logging").value;
 
         if (!message.member.roles.cache.get(ServerConfig)) {
             message.channel.send("Sorry but your not an admin if you have a admin role do **!setconfig** and set the admin role");
@@ -37,10 +39,28 @@ exports.run = (client, message, args) => {
                 }
                 else if (warnedUser.Warns === 2) {
                     warnuser.send("if you get one more warning you are getting kicked");
-                    message.channel.send("user has been warned");
+                    if(BotLogging === true){
+                        message.guild.channels.cache.get(LogChannel).send(new Discord.MessageEmbed()
+                            .setTitle("A User has Been Banned")
+                            .setAuthor(client.user.username, client.user.displayAvatarURL())
+                            .setDescription(`${banuser.user.username} has been **BANNED**`)
+                            .setColor(Colors.Gold)
+                            .setThumbnail(banuser.user.displayAvatarURL())
+                            .addField(`Reason:`, reason)
+                        );
+                    }
                 }
                 else {
-                    message.channel.send("user has been warned");
+                    if(BotLogging === true){
+                        message.guild.channels.cache.get(LogChannel).send(new Discord.MessageEmbed()
+                            .setTitle("A User has Been Banned")
+                            .setAuthor(client.user.username, client.user.displayAvatarURL())
+                            .setDescription(`${banuser.user.username} has been **BANNED**`)
+                            .setColor(Colors.Gold)
+                            .setThumbnail(banuser.user.displayAvatarURL())
+                            .addField(`Reason:`, reason)
+                        );
+                    }
                 }
 
                 client.setUser.run(warnedUser);
