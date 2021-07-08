@@ -21,6 +21,7 @@
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.2.0",
     "fs": "0.0.1-security",
+    "heroku": "^7.56.0",
     "nodemon": "^2.0.4"
   }
 }
