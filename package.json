@@ -22,6 +22,7 @@
     "discord.js": "^12.2.0",
     "fs": "0.0.1-security",
     "heroku": "^7.56.0",
+    "mongoose": "^5.13.2",
     "nodemon": "^2.0.4"
   }
 }
