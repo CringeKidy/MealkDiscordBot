@@ -1,10 +1,11 @@
 //Namespace Stuff
 const Discord = require('discord.js')
 const fs = require('fs')
-const mongoose = require('mongoose')
 
 const bot = new Discord.Client
 const config = require('./Jsons/config.json');
+const ServerConfig = require("./Schema/Serverconfig.js");
+const message = require('./events/message');
 
 bot.mongoose = require('./Util/mogodb.js')
 bot.config = config;
@@ -53,6 +54,15 @@ bot.on("ready", () => {
 })
 
 
+bot.on('guildMemberAdd', async (member) => {
+  await ServerConfig.findOneAndUpdate({id: member.guild.id}, {Members:member.guild.memberCount})
+})
+
+bot.on('guildMemberRemove', async (member) => {
+  await ServerConfig.findOneAndUpdate({id: member.guild.id}, {Members:member.guild.memberCount})
+})
+
+// connection to Mongodb 
 bot.mongoose.init();
 //log in for the bot
 bot.login(config.token);

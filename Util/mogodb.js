@@ -8,6 +8,8 @@ module.exports = {
             autoIndex: false,
             reconnectTries: Number.MAX_VALUE,
             reconnectInterval: 500,
+            useUnifiedTopology: true,
+            useFindAndModify: false,
             poolSize: 500,
             connectTimeoutMS: 10000,
             family: 4
@@ -27,5 +29,5 @@ module.exports = {
         mongoose.connection.on('disconnected', () => {
             console.log("Connection is now disconnected")
         })
-    }
+    },
 }
