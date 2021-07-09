@@ -49,6 +49,7 @@ fs.readdir("./commands/", (err, files) => {
 })
 
 
+
 bot.on("ready", () => {
   console.log(`logged in as ${bot.user.tag}`)
 })
