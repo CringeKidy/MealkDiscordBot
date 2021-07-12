@@ -2,6 +2,7 @@
 const Discord = require('discord.js')
 const fs = require('fs')
 const chalk = require('chalk')
+require('dotenv').config();
 
 const bot = new Discord.Client()
 const config = require('./Jsons/config.json');
@@ -129,4 +130,4 @@ bot.on('guildMemberRemove', async (member) => {
 // connection to Mongodb 
 bot.mongoose.init();
 //log in for the bot
-bot.login(config.token);
+bot.login(process.env.TOKEN);

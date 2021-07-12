@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const ConnectionURL = require('../Jsons/mongodb.json')
+const ConnectionURL = process.env.CONNECTION_URL
 const chalk = require("chalk")
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
             family: 4
         };
 
-        mongoose.connect(ConnectionURL.url, dbOptions)
+        mongoose.connect(ConnectionURL, dbOptions)
         mongoose.Promise = global.Promise;
 
         mongoose.connection.on('connected', () => {
