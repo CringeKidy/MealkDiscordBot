@@ -18,6 +18,10 @@ const ServerConfig = new mongoose.Schema({
         type:String,
         default: null
     },
+    MemberCount: {
+        type:String,
+        default: "0"
+    },
     ServerOwner: String
 });
 

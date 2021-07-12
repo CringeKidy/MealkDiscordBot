@@ -41,10 +41,10 @@ module.exports = async (bot, message) => {
                     message.channel.send("Sorry you dont have the right role for this")
                 }
             } */
-            cmd.execute(bot, message, args,);
+            cmd.execute(bot, message, args);
         }
         else{
-            cmd.execute(bot, message, args,);
+            cmd.execute(bot, message, args);
         }
     }
 

@@ -14,7 +14,6 @@ module.exports={
         
         const ServerName = bot.guilds.cache.get(ServerId).name
 
-
         const ServerConfigEmbed = {
             title: "Server Configuration",
             description:`This is all the options that you can configure for **${ServerName}**`,
@@ -22,18 +21,18 @@ module.exports={
             fields:[
                 {
                     name:`${ServerName} Parameters`, 
-                    value:"** **"
+                    value:"The emoji corsponeds to the Setting"
                 },
                 {
-                    name:'Prefix',
+                    name:'🔊Prefix',
                     value: Prefix
                 },
                 {
-                    name: 'Admin role',
+                    name: '👮‍♂️Admin role',
                     value: AdminRole
                 },
                 {
-                    name:"Member Join Channel",
+                    name:"🎫Member Join Channel",
                     value:MemberjoinChannel
                 }
             ],
@@ -44,37 +43,83 @@ module.exports={
             }
         }
 
-        message.author.send({embed: ServerConfigEmbed}).then(ServerConfigEmbed => {
-            ServerConfigEmbed.react("👍");
-            ServerConfigEmbed.react("👎");
-            ServerConfigEmbed.react("✅");
-            ServerConfigEmbed.react("❌");
+        await message.channel.send({embed: ServerConfigEmbed}).then(async ServerConfigEmbed => {
+            await ServerConfigEmbed.react("🔊");
+            await ServerConfigEmbed.react("👮‍♂️");
+            await ServerConfigEmbed.react("🎫");
 
             const fillter = (reaction, user) => {
-                return ['👍', '👎', '✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id;
+                return ['🔊', '👮‍♂️', '🎫'].includes(reaction.emoji.name) && user.id === message.author.id;
             }
 
             ServerConfigEmbed.awaitReactions(fillter, {max: 1, time:60000, errors:['time']})
                 .then(collected => {
                     const reaction = collected.first();
+                    
+                    if(reaction.emoji.name === '🔊'){
+                        message.channel.send("Reply with what you would like to change prefix to(p.s type cancel to cancel change)").then(() => {
+                            message.channel.awaitMessages(m => m.channel.id === message.channel.id,{
+                                max:1, 
+                                time: 30000,
+                                errors:['time']
+                            })
+                            .then(async msg =>{
+                                const m = msg.first();
 
-                    if(reaction.emoji.name === '👍'){
-                        message.author.send("thumbs up")
+                                if(m.content === 'cancel'){
+                                    message.channel.send("ok cancling change")
+                                }else{
+                                    await ServerConfig.findOneAndUpdate({_id: message.guild.id}, {prefix: m.content})
+                                    message.channel.send(`Ok i have changed the prefix to ${m.content}`)
+                                }
+                            })
+                        })
                     }
-                    if(reaction.emoji.name === '👎'){
-                        message.author.send("thumbs down")
+                    if(reaction.emoji.name === '👮‍♂️'){
+                        message.channel.send("Reply with the name of the role for admins **Case Sesitive**(p.s type cancel to cancel change)").then(() => {
+                            message.channel.awaitMessages(m => m.channel.id === message.channel.id,{
+                                max:1, 
+                                time: 30000,
+                                errors:['time']
+                            })
+                            .then(async msg =>{
+                                const m = msg.first();
+
+                                if(m.content === 'cancel'){
+                                    message.channel.send("ok cancling change")
+                                }else{
+                                    await ServerConfig.findOneAndUpdate({_id: message.guild.id}, {AdminRole: m.content})
+                                    message.channel.send(`Ok i have changed the AdminRole to ${m.content}`)
+                                }
+                            })
+                        })
                     }
-                    if(reaction.emoji.name === '✅'){
-                        message.author.send("Check")
-                    }
-                    if(reaction.emoji.name === '❌'){
-                        console.log('over')
-                        done == false
-                        message.author.send("X")
-                    }                    
+                    if(reaction.emoji.name === '🎫'){
+                        message.channel.send("Reply with the channel name **Case Sesitive** put null to turn off this feature(p.s type cancel to cancel change)").then(() => {
+                            message.channel.awaitMessages(m => m.channel.id === message.channel.id,{
+                                max:1, 
+                                time: 30000,
+                                errors:['time']
+                            })
+                            .then(async msg =>{
+                                const m = msg.first();
+
+                                if(m.content === 'cancel'){
+                                    message.channel.send("ok cancling change")
+                                }else{
+                                    let channel_id = m.content.replace('<','').replace('>','').replace('#','')
+
+                                    let channel = message.guild.channels.cache.get(channel_id).id 
+
+                                    await ServerConfig.findOneAndUpdate({_id: message.guild.id}, {MemberJoinChannel: channel})
+                                    message.channel.send(`Ok i have changed the Member Join Channel to ${m.content}`)
+                                }
+                            })
+                        })
+                    }    
                 })
                 .catch(collected => {
-                    message.author.send('you didnt react')
+                    message.channel.send('you didnt react')
                 })
 
         })
