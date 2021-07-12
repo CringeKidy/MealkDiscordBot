@@ -50,7 +50,7 @@ fs.readdir("./commands/", (err, files) => {
 
 
 
-bot.on("ready", async () => {
+bot.on("ready",() => {
   console.log(chalk.green(`logged in as ${bot.user.tag}`))
 })
 

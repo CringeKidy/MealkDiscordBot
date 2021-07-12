@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const ConnectionURL = process.env.CONNECTION_URL
+const ConnectionURL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@data.3nr62.mongodb.net/Mealk`
 const chalk = require("chalk")
 
 module.exports = {
