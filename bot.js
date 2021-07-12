@@ -5,12 +5,10 @@ const chalk = require('chalk')
 require('dotenv').config();
 
 const bot = new Discord.Client()
-const config = require('./Jsons/config.json');
 const color = require('./Jsons/colors.json')
 const ServerConfig = require("./Schema/ServerConfigSchema.js");
 
 bot.mongoose = require('./Util/mogodb.js')
-bot.config = config;
 
 fs.readdir('./events/', (err, files) => {
   if(err) return console.error(err);
