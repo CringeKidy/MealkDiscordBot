@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const ConnectionURL = require('../Jsons/mongodb.json')
+const chalk = require("chalk")
 
 module.exports = {
     init: () => {
@@ -19,7 +20,7 @@ module.exports = {
         mongoose.Promise = global.Promise;
 
         mongoose.connection.on('connected', () => {
-            console.log('Mongoose has successfully opened')
+            console.log(chalk.red('Mongoose has successfully opened'))
         })
         
         mongoose.connection.on('err', err => {

@@ -1,10 +1,11 @@
 //Namespace Stuff
 const Discord = require('discord.js')
 const fs = require('fs')
+const chalk = require('chalk')
 
-const bot = new Discord.Client
+const bot = new Discord.Client()
 const config = require('./Jsons/config.json');
-const ServerConfig = require("./Schema/Serverconfig.js");
+const ServerConfig = require("./Schema/ServerConfigSchema.js");
 const message = require('./events/message');
 
 bot.mongoose = require('./Util/mogodb.js')
@@ -41,7 +42,7 @@ fs.readdir("./commands/", (err, files) => {
 
     // Get just the command name from the file
     let commandName = file.split(".")[0]
-    console.log(`Attempting to load command: ${commandName}`)
+    console.log(chalk.yellow(`Attempting to load command: ${commandName}`))
 
     //storing in the command collection
     bot.commands.set(commandName, props)
@@ -51,9 +52,20 @@ fs.readdir("./commands/", (err, files) => {
 
 
 bot.on("ready", () => {
-  console.log(`logged in as ${bot.user.tag}`)
+  console.log(chalk.green(`logged in as ${bot.user.tag}`))
 })
 
+bot.on('guildCreate', async guild => {
+  ServerConfig.countDocuments({_id: guild.id}, function (err, count) {
+    if(err) return console.log(err);
+    if(count === 0){
+      ServerConfig.create({
+        _id: guild.id,
+      });
+      console.log('bot has joined there server and saved to DB')
+    }
+  })
+})  
 
 bot.on('guildMemberAdd', async (member) => {
   await ServerConfig.findOneAndUpdate({id: member.guild.id}, {Members:member.guild.memberCount})

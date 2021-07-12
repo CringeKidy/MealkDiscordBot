@@ -1,4 +1,6 @@
-exports.run = (bot, message, args) => {
-
-    message.channel.send("pong!")
+module.exports={
+    "AdminCommand": false,
+    execute(bot, message, args){
+        message.channel.send("Pong!")
+    }
 }
