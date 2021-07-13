@@ -14,6 +14,10 @@ const ServerConfig = new mongoose.Schema({
         type: String,
         default: null
     },
+    MuteRole:{
+        type: String,
+        default: null
+    },
     MemberJoinChannel: {
         type:String,
         default: null

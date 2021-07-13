@@ -11,8 +11,19 @@ module.exports = async (bot, message) => {
     }
     else{
         const Config = await ServerConfig.findOne({_id:message.guild.id})
-        const prefix = Config.get('prefix')
-        const AdminRole = Config.get('AdminRole')
+        let prefix;
+        let AdminRole;
+        try{
+            prefix = Config.get('prefix')
+            AdminRole = Config.get('AdminRole');
+        } 
+        catch{
+            ServerConfig.create({
+                _id: message.guild.id,
+                MemberCount: message.guild.memberCount
+            });
+            return message.channel.send("Your setting were rest due to an error our part please do !serverconfig to reset them")
+        }
         
     
         // Checks if the message has ! at the start of it
@@ -30,18 +41,20 @@ module.exports = async (bot, message) => {
     
         // if the Command exits run it with these parameters
         if(cmd.AdminCommand === true){
-            /* if(AdminRole === null){
+            if(message.author.id === message.guild.owner.id){
+                cmd.execute(bot, message, args);
+            }
+            if(AdminRole === null){
                 message.author.send(`${message.author} There is no admin role set please configure me with !Serverconfig in the server`)
             }
             else{
-                if(message.member.roles.cache.has(AdminRole)){
-                    message.channel.send("has command");
+                if(message.member.roles.cache.find(r => r.name === AdminRole)){
+                    cmd.execute(bot, message, args);
                 }
                 else{
-                    message.channel.send("Sorry you dont have the right role for this")
+                    message.reply("Sorry you dont have the role to use this command")
                 }
-            } */
-            cmd.execute(bot, message, args);
+            }
         }
         else{
             cmd.execute(bot, message, args);

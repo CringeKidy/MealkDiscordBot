@@ -5,7 +5,7 @@ const chalk = require('chalk')
 require('dotenv').config();
 
 const bot = new Discord.Client()
-const color = require('./Jsons/colors.json')
+const Colors = require('./Jsons/colors.json')
 const ServerConfig = require("./Schema/ServerConfigSchema.js");
 
 bot.mongoose = require('./Util/mogodb.js')
@@ -48,8 +48,6 @@ fs.readdir("./commands/", (err, files) => {
   })
 })
 
-
-
 bot.on("ready",() => {
   console.log(chalk.green(`logged in as ${bot.user.tag}`))
 })
@@ -57,6 +55,31 @@ bot.on("ready",() => {
 bot.on('guildCreate', async guild => {
   let channelId;
   let channels = guild.channels.cache;
+
+  const startEmbed = {
+    title:"Thank you for adding me",
+    description:"Thank you for adding me to your server here some commands i recommned to do first",
+    color: Colors.Purple,
+    fields:[
+      {
+        name:"!Serverconfig",
+        value:"This lets you start to configure the server settings i would recommned setting the admin role first"
+      },
+      {
+        name:"!addroles",
+        value:"i will make all the roles needed like Admin role and mute role"
+      },
+      {
+        name:"Vist the github",
+        value:"https://github.com/CringeKidy/MealkDiscordBot"
+      }
+    ],
+    timestamp: new Date(),
+    footer:{
+      text:`Created by ${bot.user.tag}`,
+      icon_url: bot.user.displayAvatarURL()
+    }
+  }
 
   channelLoop:
     for(let key in channels){
@@ -68,7 +91,7 @@ bot.on('guildCreate', async guild => {
     }
 
   let channel = guild.channels.cache.get(guild.systemChannelID || channelId);
-  channel.send(`Thank you for inviting me to the server to start configuring the settings i have for the server please do !serverconfig in a text channel`);
+  channel.send({embed: startEmbed});
 
   ServerConfig.countDocuments({_id: guild.id}, function (err, count) {
     if(err) return console.log(err);
@@ -77,7 +100,7 @@ bot.on('guildCreate', async guild => {
         _id: guild.id,
         MemberCount: guild.memberCount
       });
-      console.log('bot has joined there server and saved to DB')
+      console.log(`${guild.name} has been saved to the db`)
     }
   })
 })  
@@ -118,11 +141,106 @@ bot.on('guildMemberAdd', async (member) => {
   if(MemberChannel != null){
     member.guild.channels.cache.get(MemberChannel).send({embed: messageEmbed})
   }
-
+  if(MemberChannel = null){
+    return;
+  }
 })
 
 bot.on('guildMemberRemove', async (member) => {
   await ServerConfig.findOneAndUpdate({_id: member.guild.id}, {MemberCount:member.guild.memberCount})
+})
+
+bot.on('messageReactionAdd', async (reaction, user) =>{
+  if(reaction.partial){
+    try{
+      await reaction.fetch();
+    }
+    catch(err){
+      console.log(err)
+      return
+    }
+  }
+
+  if(reaction.emoji.name === '🔊' && reaction.count > 1){
+    reaction.message.channel.send("Reply with what you would like to change prefix to(p.s type cancel to cancel change)").then(() => {
+      reaction.message.channel.awaitMessages(m => m.channel.id === reaction.message.channel.id,{
+            max:1, 
+            time: 30000,
+            errors:['time']
+        })
+        .then(async msg =>{
+            const m = msg.first();
+
+            if(m.content === 'cancel'){
+                reaction.message.channel.send("ok cancling change")
+            }else{
+                await ServerConfig.findOneAndUpdate({_id: reaction.message.guild.id}, {prefix: m.content})
+                reaction. message.reply(`Ok i have changed the prefix to ${m.content}.\ndo !serverstatus to see the server configruation`)
+            }
+        })
+    })
+  }
+  if(reaction.emoji.name === '👮‍♂️' && reaction.count > 1){
+    reaction.message.channel.send("Reply with the name of the role for admins **Case Sesitive**(p.s type cancel to cancel change)").then(() => {
+      reaction.message.channel.awaitMessages(m => m.channel.id === reaction.message.channel.id,{
+            max:1, 
+            time: 30000,
+            errors:['time']
+        })
+        .then(async msg =>{
+            const m = msg.first();
+
+            if(m.content === 'cancel'){
+               reaction.message.channel.send("ok cancling change")
+            }else{
+                await ServerConfig.findOneAndUpdate({_id: reaction.message.guild.id}, {AdminRole: m.content})
+                reaction.message.reply(`Ok i have changed the AdminRole to ${m.content}.\ndo !serverstatus to see the server configruation`)
+            }
+        })
+    })
+  }
+  if(reaction.emoji.name === '🔇' && reaction.count > 1){
+    reaction.message.channel.send("Reply with the name of the role for muting people **Case Sesitive**(p.s type cancel to cancel change)").then(() => {
+      reaction.message.channel.awaitMessages(m => m.channel.id === reaction.message.channel.id,{
+            max:1, 
+            time: 30000,
+            errors:['time']
+        })
+        .then(async msg =>{
+            const m = msg.first();
+
+            if(m.content === 'cancel'){
+               reaction.message.channel.send("ok cancling change")
+            }else{
+                await ServerConfig.findOneAndUpdate({_id: reaction.message.guild.id}, {MuteRole: m.content})
+                reaction.message.reply(`Ok i have changed the MuteRole to ${m.content}.\ndo !serverstatus to see the server configruation`)
+            }
+        })
+    })
+  }
+  if(reaction.emoji.name === '🎫' && reaction.count > 1){
+    reaction.message.channel.send("Tag the channel please.put null to turn off this feature(p.s type cancel to cancel change)").then(() => {
+      reaction.message.channel.awaitMessages(m => m.channel.id === reaction.message.channel.id,{
+            max:1, 
+            time: 30000,
+            errors:['time']
+        })
+        .then(async msg =>{
+            const m = msg.first();
+
+            if(m.content === 'cancel'){
+              reaction.message.channel.send("ok cancling change")
+            }else{
+                let channel_id = m.content.replace('<','').replace('>','').replace('#','')
+
+                let channel = reaction.message.guild.channels.cache.get(channel_id).id 
+
+                await ServerConfig.findOneAndUpdate({_id: reaction.message.guild.id}, {MemberJoinChannel: channel})
+                reaction.message.reply(`Ok i have changed the Member Join Channel to ${m.content}.\ndo !serverstatus to see the server configruation`)
+            }
+        })
+    })
+  }
 })
 
 // connection to Mongodb 
