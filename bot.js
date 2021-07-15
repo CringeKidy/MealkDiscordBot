@@ -76,6 +76,10 @@ bot.on('guildCreate', async guild => {
         value:"i will make all the roles needed like Admin role and mute role"
       },
       {
+        name:"!help",
+        value:"have a look at all the commands i can do"
+      },
+      {
         name:"Vist the github",
         value:"https://github.com/CringeKidy/MealkDiscordBot"
       }
@@ -166,7 +170,7 @@ bot.on('messageReactionAdd', async (reaction, user) =>{
       return
     }
   }
-  
+
   if(reaction.emoji.name === '🔊' && reaction.count > 1){
     reaction.message.channel.send("Reply with what you would like to change prefix to(p.s type cancel to cancel change)").then(() => {
       reaction.message.channel.awaitMessages(m => m.channel.id === reaction.message.channel.id,{
