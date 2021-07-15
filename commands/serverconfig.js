@@ -4,6 +4,9 @@ const Color = require('../Jsons/colors.json')
 
 module.exports={
     "AdminCommand": true,
+    "Description": "this lets admins configure the server settings",
+    "Format": "!serverconfig <setting eg. prefix, Adminrole> <changedsetting>",
+    "example": "!serverconfig prefix ?",
     async execute(bot, message, args){
         
         const Config = await ServerConfig.findOne({_id:message.guild.id})
@@ -35,7 +38,7 @@ module.exports={
                 },
                 {
                     name: '🔇Mute role',
-                    value: AdminRole
+                    value: MuteRole
                 },
                 {
                     name:"🎫Member Join Channel",
@@ -68,8 +71,17 @@ module.exports={
                 }
             }
             if(args[0].toLowerCase().includes('adminrole')){
+                let AdminRole;
+                try{
+                    AdminRole = message.guild.roles.cache.find(r => r.name === args[1]).id 
+
+                }
+                catch{
+                    return message.reply('Sorry that is not a existing role')
+                }
+
                 if(args[1] != null){
-                    await ServerConfig.findOneAndUpdate({_id: message.guild.id}, {AdminRole: args[1]})
+                    await ServerConfig.findOneAndUpdate({_id: message.guild.id}, {AdminRole: AdminRole})
                     message.reply(`Ok i have changed the Admin Role to **${args[1]}**.\ndo !serverstatus to see the server configruation`)
                 }
                 else{
@@ -77,8 +89,17 @@ module.exports={
                 }
             }
             if(args[0].toLowerCase().includes('muterole')){
+                let MuteRole;
+                try{
+                    MuteRole = message.guild.roles.cache.find(r => r.name === args[1]).id
+                }
+                catch{
+                    return message.reply('Sorry that is not a existing role')
+                }
+
+
                 if(args[1] != null){
-                    await ServerConfig.findOneAndUpdate({_id: message.guild.id}, {MuteRole: args[1]})
+                    await ServerConfig.findOneAndUpdate({_id: message.guild.id}, {MuteRole: MuteRole})
                     message.reply(`Ok i have changed the Mute Role to **${args[1]}**.\ndo !serverstatus to see the server configruation`)
                 }
                 else{
@@ -104,15 +125,38 @@ module.exports={
             }
         }
         else{
-            await message.channel.send({embed: ServerConfigEmbed}).then(async ServerConfigEmbed => {
-            await ServerConfigEmbed.react("🔊");
-            await ServerConfigEmbed.react("👮‍♂️");
-            await ServerConfigEmbed.react("🔇");
-            await ServerConfigEmbed.react("🎫");
-
-            ServerConfigEmbed.delete({timeout:60000})
-            });
+            let filter = m => m.author.id === message.author.id
+    
+            await message.channel.send('**Any** user can change the settings of your server is this a secure location Y or N').then(() => {
+                message.channel.awaitMessages(filter, {max:1, time: 30000, error:['time']})
+                .then(async collected => {
+                    const m = collected.first()
+    
+                    if(m.content.toUpperCase() === "Y"){
+                        message.channel.send('OK')
+                       
+                        await message.channel.send({embed: ServerConfigEmbed}).then(async ServerConfigEmbed => {
+                            await ServerConfigEmbed.react("🔊");
+                            await ServerConfigEmbed.react("👮‍♂️");
+                            await ServerConfigEmbed.react("🔇");
+                            await ServerConfigEmbed.react("🎫");
+                
+                            ServerConfigEmbed.delete({timeout:60000})
+                        });
+                    }
+                    if(m.content.toUpperCase() === "N"){
+                        message.reply('Im sorry but i can no longer let this session go on knowing this please start session in secure location')
+                    }
+                })
+                .catch(collected => {
+                    message.reply('you didnt answer')
+                })
+            })
         }
-0.
+
+
+
+
+        
     }
 }

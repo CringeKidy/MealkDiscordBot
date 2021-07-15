@@ -2,6 +2,9 @@ const ServerConfig = require("../Schema/ServerConfigSchema.js");
 
 module.exports={
     "AdminCommand": true,
+    "Description": "this lets admins ban users with a command",
+    "Format": "!ban @<user> (optional)<days> (optional)<reason>",
+    "example": "!ban @CringeKidy 2 Cause he stinks",
     async execute(bot, message, args){
         const Config = await ServerConfig.findOne({_id:message.guild.id})
         const AdminRole = Config.get('AdminRole')
@@ -12,7 +15,7 @@ module.exports={
         let member = message.guild.member(user_id)
 
         if(first.toLowerCase().includes('help')){
-            return message.reply('This command format is !ban @<user> (optinal)<days> (optinal)<reason>.\n has to be in that order tho so if you want to say reason you have to specify days banned ');
+            return message.reply('This command format is !ban @<user> (optional)<days> (optional)<reason>.\n has to be in that order tho so if you want to say reason you have to specify days banned ');
         }
 
         if(member === null)return message.reply('User does not exits');
@@ -32,7 +35,7 @@ module.exports={
             }
         }        
         else{
-            message.reply('you did mention anyone.\nThis command format is !ban @<user> (optinal)<days> (optinal)<reason>')
+            message.reply('you did mention anyone.\nThis command format is !ban @<user> (optional)<days> (optional)<reason>')
         }
     }
 }

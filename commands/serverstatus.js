@@ -3,7 +3,10 @@ const {MessageEmbed} = require('discord.js')
 const Color = require('../Jsons/colors.json')
 
 module.exports={
-    "AdminCommand": true,
+    "AdminCommand": false,
+    "Description": "this users see the server settings and member count",
+    "Format": "!serverstatus",
+    "example": "!serverstatus",
     async execute(bot, message, args){
         
         if(message.author.bot) return;

@@ -31,6 +31,7 @@ fs.readdir('./events/', (err, files) => {
 
 
 bot.commands = new Discord.Collection()
+bot.commandName = new Discord.Collection()
 
 fs.readdir("./commands/", (err, files) => {
   if(err) return console.error(err);
@@ -45,11 +46,16 @@ fs.readdir("./commands/", (err, files) => {
 
     //storing in the command collection
     bot.commands.set(commandName, props)
+    bot.commandName.set(commandName)
   })
 })
 
 bot.on("ready",() => {
   console.log(chalk.green(`logged in as ${bot.user.tag}`))
+})
+
+bot.on("error",(err) => {
+  message.channel.send(`There was an error: ${err}`)
 })
 
 bot.on('guildCreate', async guild => {
@@ -115,7 +121,7 @@ bot.on('guildMemberAdd', async (member) => {
   const messageEmbed = {
     title:"New user as joined the channel",
     description:"This user has just joined the channel and now gets a welcoming for it",
-    color: color.Green,
+    color: Colors.Green,
     fields:[
       {
         name:"Username",
@@ -160,7 +166,7 @@ bot.on('messageReactionAdd', async (reaction, user) =>{
       return
     }
   }
-
+  
   if(reaction.emoji.name === '🔊' && reaction.count > 1){
     reaction.message.channel.send("Reply with what you would like to change prefix to(p.s type cancel to cancel change)").then(() => {
       reaction.message.channel.awaitMessages(m => m.channel.id === reaction.message.channel.id,{
@@ -191,10 +197,14 @@ bot.on('messageReactionAdd', async (reaction, user) =>{
             const m = msg.first();
 
             if(m.content === 'cancel'){
-               reaction.message.channel.send("ok cancling change")
+              reaction.message.channel.send("ok cancling change")
             }else{
-                await ServerConfig.findOneAndUpdate({_id: reaction.message.guild.id}, {AdminRole: m.content})
-                reaction.message.reply(`Ok i have changed the AdminRole to ${m.content}.\ndo !serverstatus to see the server configruation`)
+              if(!AdminRole){
+                return message.reply(`Sorry that is not a existing role`)
+              }
+
+              await ServerConfig.findOneAndUpdate({_id: reaction.message.guild.id}, {AdminRole: AdminRole})
+              reaction.message.reply(`Ok i have changed the AdminRole to ${m.content}.\ndo !serverstatus to see the server configruation`)
             }
         })
     })
@@ -212,6 +222,15 @@ bot.on('messageReactionAdd', async (reaction, user) =>{
             if(m.content === 'cancel'){
                reaction.message.channel.send("ok cancling change")
             }else{
+              let MuteRole;
+              try{
+                MuteRole =  reaction.message.guild.roles.cache.find(r => r.name === m.content).id
+
+              }
+              catch{
+                return message.reply('Sorry that is not a existing role')
+              }
+
                 await ServerConfig.findOneAndUpdate({_id: reaction.message.guild.id}, {MuteRole: m.content})
                 reaction.message.reply(`Ok i have changed the MuteRole to ${m.content}.\ndo !serverstatus to see the server configruation`)
             }

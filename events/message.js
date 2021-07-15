@@ -1,6 +1,10 @@
 const ServerConfig = require("../Schema/ServerConfigSchema.js")
+const Colors = require("../Jsons/colors.json")
 
 module.exports = async (bot, message) => {
+
+    let helpcmd;
+    let keys;
 
 
     // ignore all the bots
@@ -25,41 +29,106 @@ module.exports = async (bot, message) => {
             return message.channel.send("Your setting were rest due to an error our part please do !serverconfig to reset them")
         }
         
-    
-        // Checks if the message has ! at the start of it
         if(!message.content.startsWith(prefix)) return;
-    
+
         //Splits the message up from !pong to ! pong and then uses pong to find command
         const args = message.content.slice(prefix.length).trim().split(/ +/g);
         const command = args.shift().toLowerCase();
     
         // Then looks for command in bot.commands collection
-        const cmd = bot.commands.get(command)
-    
-        // If the command dosent exit ingore the message
-        if(!cmd) return;
-    
-        // if the Command exits run it with these parameters
-        if(cmd.AdminCommand === true){
-            if(message.author.id === message.guild.owner.id){
-                cmd.execute(bot, message, args);
-            }
-            if(AdminRole === null){
-                message.author.send(`${message.author} There is no admin role set please configure me with !Serverconfig in the server`)
-            }
-            else{
-                if(message.member.roles.cache.find(r => r.name === AdminRole)){
-                    cmd.execute(bot, message, args);
+        const cmd = bot.commands.get(command);
+
+
+        if(command === 'help'){
+            helpcmd = bot.commands.get(args[0])
+            keys = Array.from(bot.commandName.keys()).join(", ");
+            const commandsEmbed = {
+                title:"Commands",
+                description: "This is all the commands i have",
+                color: Colors.Blue,
+                fields:[
+                    {
+                        name:"Commands",
+                        value: keys
+                    },
+                    {
+                        name:"use one of these in !help",
+                        value: "for example **!help serverconfig**"
+                    },
+                ],
+                timestamp: new Date(),
+                footer:{
+                    text:`Created by ${bot.user.tag}`,
+                    icon_url: bot.user.displayAvatarURL()
                 }
-                else{
-                    message.reply("Sorry you dont have the role to use this command")
+            }
+
+            if(!helpcmd) return message.channel.send({embed: commandsEmbed})
+            const helpEmbed = {
+                title:"Command help",
+                description: "This is to help you understand a command",
+                color: Colors.Green,
+                fields:[
+                    {
+                        name:"Command name",
+                        value: args[0],
+                        inline: true
+                    },
+                    {
+                        name:"Description",
+                        value: helpcmd.Description,
+                        inline: true
+                    },
+                    {
+                        name:"Format",
+                        value: helpcmd.Format
+                        
+                    },
+                    {
+                        name:"Example",
+                        value: helpcmd.example
+                    }
+                ],
+                timestamp: new Date(),
+                footer:{
+                    text:`Created by ${bot.user.tag}`,
+                    icon_url: bot.user.displayAvatarURL()
                 }
+            }
+            // If the command dosent exit ingore the message
+
+            if(command === "help" && args === undefined){
+                return message.channel.send({embed: commandsEmbed})
+            }
+            if(command === "help" && args != undefined){
+                return message.channel.send({embed: helpEmbed})
             }
         }
         else{
-            cmd.execute(bot, message, args);
+            
+            if(!cmd) return;
+
+            // if the Command exits run it with these parameters
+            if(cmd.AdminCommand === true){
+                if(message.author.id === message.guild.owner.id){
+                    cmd.execute(bot, message, args);
+                }
+                if(AdminRole === null){
+                    message.author.send(`${message.author} There is no admin role set please configure me with !Serverconfig in the server`)
+                }
+                else{
+                    if(message.member.roles.cache.has(AdminRole)){
+                        return cmd.execute(bot, message, args);
+                    }
+                    if(message.author.id != message.guild.owner.id){
+                        return message.reply("Sorry you dont have the role to use this command")
+                    }
+                }
+            }
+            else{
+                cmd.execute(bot, message, args);
+            }
         }
+
     }
-
-
 }
