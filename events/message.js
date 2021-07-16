@@ -1,12 +1,7 @@
 const ServerConfig = require("../Schema/ServerConfigSchema.js")
-const Colors = require("../Jsons/colors.json")
+
 
 module.exports = async (bot, message) => {
-
-    let helpcmd;
-    let keys;
-
-
     // ignore all the bots
     if(message.author.bot) return;
     
@@ -37,97 +32,28 @@ module.exports = async (bot, message) => {
     
         // Then looks for command in bot.commands collection
         const cmd = bot.commands.get(command);
+        
+        if(!cmd) return;
 
-
-        if(command === 'help'){
-            helpcmd = bot.commands.get(args[0])
-            keys = Array.from(bot.commandName.keys()).join(", ");
-            const commandsEmbed = {
-                title:"Commands",
-                description: "This is all the commands i have",
-                color: Colors.Blue,
-                fields:[
-                    {
-                        name:"Commands",
-                        value: keys
-                    },
-                    {
-                        name:"use one of these in !help",
-                        value: "for example **!help serverconfig**"
-                    },
-                ],
-                timestamp: new Date(),
-                footer:{
-                    text:`Created by ${bot.user.tag}`,
-                    icon_url: bot.user.displayAvatarURL()
+        // if the Command exits run it with these parameters
+        if(cmd.AdminCommand === true){
+            if(message.author.id === message.guild.owner.id){
+                cmd.execute(bot, message, args);
+            }
+            if(AdminRole === null){
+                message.author.send(`${message.author} There is no admin role set please configure me with !Serverconfig in the server`)
+            }
+            else{
+                if(message.member.roles.cache.has(AdminRole)){
+                    return cmd.execute(bot, message, args);
                 }
-            }
-
-            if(!helpcmd) return message.channel.send({embed: commandsEmbed})
-            const helpEmbed = {
-                title:"Command help",
-                description: "This is to help you understand a command",
-                color: Colors.Green,
-                fields:[
-                    {
-                        name:"Command name",
-                        value: args[0],
-                        inline: true
-                    },
-                    {
-                        name:"Description",
-                        value: helpcmd.Description,
-                        inline: true
-                    },
-                    {
-                        name:"Format",
-                        value: helpcmd.Format
-                        
-                    },
-                    {
-                        name:"Example",
-                        value: helpcmd.example
-                    }
-                ],
-                timestamp: new Date(),
-                footer:{
-                    text:`Created by ${bot.user.tag}`,
-                    icon_url: bot.user.displayAvatarURL()
+                if(message.author.id != message.guild.owner.id){
+                    return message.reply("Sorry you dont have the role to use this command")
                 }
-            }
-            // If the command dosent exit ingore the message
-
-            if(command === "help" && args === undefined){
-                return message.channel.send({embed: commandsEmbed})
-            }
-            if(command === "help" && args != undefined){
-                return message.channel.send({embed: helpEmbed})
             }
         }
         else{
-            
-            if(!cmd) return;
-
-            // if the Command exits run it with these parameters
-            if(cmd.AdminCommand === true){
-                if(message.author.id === message.guild.owner.id){
-                    cmd.execute(bot, message, args);
-                }
-                if(AdminRole === null){
-                    message.author.send(`${message.author} There is no admin role set please configure me with !Serverconfig in the server`)
-                }
-                else{
-                    if(message.member.roles.cache.has(AdminRole)){
-                        return cmd.execute(bot, message, args);
-                    }
-                    if(message.author.id != message.guild.owner.id){
-                        return message.reply("Sorry you dont have the role to use this command")
-                    }
-                }
-            }
-            else{
-                cmd.execute(bot, message, args);
-            }
+            cmd.execute(bot, message, args);
         }
 
     }
