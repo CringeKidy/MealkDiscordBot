@@ -54,10 +54,6 @@ bot.on("ready",() => {
   console.log(chalk.green(`logged in as ${bot.user.tag}`))
 })
 
-bot.on("error",(err) => {
-  message.channel.send(`There was an error: ${err}`)
-})
-
 bot.on('guildCreate', async guild => {
   let channelId;
   let channels = guild.channels.cache;
