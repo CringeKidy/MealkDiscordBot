@@ -1,30 +1,38 @@
 {
-  "name": "mess-around-bot",
-  "version": "1.0.0",
-  "description": "this is a discord bot",
-  "main": "bot.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bot.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CringeKidy/DiscordBot.git"
-  },
-  "author": "Justace Cornelder",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CringeKidy/DiscordBot/issues"
-  },
-  "homepage": "https://github.com/CringeKidy/DiscordBot/#readme",
+  "name": "front-ends",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "@discordjs/opus": "^0.3.3",
-    "chalk": "^4.1.1",
-    "discord.js": "^12.5.3",
-    "dotenv": "^10.0.0",
-    "fs": "0.0.1-security",
-    "heroku": "^7.56.0",
-    "mongoose": "^5.13.2",
-    "nodemon": "^2.0.12"
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "web-vitals": "^1.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
