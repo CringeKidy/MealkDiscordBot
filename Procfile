@@ -1,2 +1,2 @@
 web: npm build
-worker: echo no
+worker: echo "I don't want a web process"
