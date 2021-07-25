@@ -3,7 +3,7 @@ const DiscordStrat = require('passport-discord');
 const User = require('../database/schemas/user.js');
 
 passport.serializeUser((user, done) => {
-  done(null, user.discordID)
+  done(null, user.discordId)
 });
 
 passport.deserializeUser(async (discordId, done) => {

@@ -1,23 +1,22 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import {Switch, Route} from "react-router-dom"
+import {LandingPage, MenuPage, DashboardPage} from './pages'
 
 function App() {
-  const [data, setData] = React.useState(null);
-
+  /* const [data, setData] = React.useState(null);
   React.useEffect(() => {
-    fetch("/api")
+    fetch("/test")
       .then((res) => res.json())
       .then((data) => setData(data.message));
-  }, []);
+  }, []); */
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>{!data ? "Loading..." : data}</p>
-      </header>
-    </div>
+    <Switch>
+      <Route path="/" exact={true} component={LandingPage}/>
+      <Route path='/menu' exact={true} component={MenuPage}/>
+      <Route path='/dashboard' exact={true} component={DashboardPage}/>
+    </Switch>
   );
 }
 
