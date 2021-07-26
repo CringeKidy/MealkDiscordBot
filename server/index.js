@@ -20,17 +20,8 @@ const app = express();
 
 mongodb.init();
 
-
-/* // Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, '../client/build'))); */  
-
-/* app.use((req, res) => {
-  origin = req.get('origin')
-}) */
-
-
 app.use(cors({
-  origin:[process.env.URL],
+  origin:[`http://localhost:3000`],
   credentials: true,
 }))
 
