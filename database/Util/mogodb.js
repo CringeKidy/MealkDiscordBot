@@ -1,15 +1,18 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose')
 const ConnectionURL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@data.3nr62.mongodb.net/Mealk`
 const chalk = require("chalk")
 
 module.exports = {
     init: () => {
+
         const dbOptions ={
             useNewUrlParser: true,
             autoIndex: false,
+            useUnifiedTopology: true,
             reconnectTries: Number.MAX_VALUE,
             reconnectInterval: 500,
-            useUnifiedTopology: true,
             useFindAndModify: false,
             poolSize: 500,
             connectTimeoutMS: 10000,
