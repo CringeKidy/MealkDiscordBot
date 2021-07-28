@@ -1,2 +1,2 @@
-web: npm start
-worker: echo "npm start"
+web: echo "nah"
+worker: npm start
