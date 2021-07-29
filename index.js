@@ -4,6 +4,7 @@ require('./strats/discord.js')
 // server/index.js
 const express = require('express');
 const PORT = process.env.PORT || 3001;
+const apiwebsite = process.env.URL || "http://localhost:3001"
 
 const path = require('path');
 const routes = require('./routes')
@@ -17,7 +18,7 @@ const Store  = require('connect-mongo');
 
 const app = express();
 app.use(cors({
-  origin:[`http://localhost:3000`],
+  origin:[apiwebsite],
   credentials: true,
 }))
 
@@ -35,18 +36,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.static(path.join(__dirname, '../frontend/build')));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
-
 app.use('/api', routes);
-
-// Handle GET requests to /api route
-app.get("/test", (req, res) => {
-  res.json({ message: 'yes' });
-});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
