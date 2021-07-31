@@ -9,10 +9,10 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors({
-  origin:'http://localhost:3000'
+  origin:['http://192.168.1.6:3000', 'http://localhost:3000', 'https://mealkdashboard.netlify.app']
 }))
 
-app.get('/api', (req, res) => {
+app.use('/api', (req, res) => {
   res.send({msg:"yes"})
 })
 
