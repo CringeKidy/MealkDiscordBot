@@ -4,7 +4,7 @@
   "description": "this api injection for react app",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "npm i && node index.js",
     "dev": "nodemon index.js"
   },
   "author": "CringeKidy",
