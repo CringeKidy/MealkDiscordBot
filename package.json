@@ -4,7 +4,7 @@
   "description": "this api injection for react app",
   "main": "index.js",
   "scripts": {
-    "start": "npm i && node index.js",
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "author": "CringeKidy",
@@ -15,6 +15,8 @@
     "express": "^4.17.1",
     "mongoose": "^5.13.3",
     "nodemon": "^2.0.12",
-    "npm": "^7.20.2"
+    "npm": "^7.20.2",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4"
   }
 }
