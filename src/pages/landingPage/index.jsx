@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
 const apiUrl = process.env.API_URL || 'http://localhost:3001'
 
 export default function LandingPage(){
@@ -16,8 +17,11 @@ export default function LandingPage(){
 
     return(
         <div>
-            <h1>Menu page</h1>
-            <h2>{apiData?.msg}</h2>
+            <h1>Landing page</h1>
+            <Link to="/menu">
+                <p>Menu page</p>
+            </Link>
+            <p>{apiData?.msg}</p>
         </div>
     )
 }
