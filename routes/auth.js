@@ -1,7 +1,14 @@
+const passport = require('passport')
 const router = require('express').Router();
 
-router.use('/', (req, res) => {
-    res.send(200)
+const redirect = process.env.redirectURL || "http://localhost:3001"
+
+router.use('/discord', passport.authenticate('discord'));
+
+router.use('/discord/redirect', passport.authenticate('discord', {
+    failureRedirect: "/"
+}), function(req, res){
+    res.redirect(redirect+'/menu')
 })
 
 module.exports = router

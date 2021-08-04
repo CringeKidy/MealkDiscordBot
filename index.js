@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./starts/discord');
 
 // server/index.js
 const express = require('express');
